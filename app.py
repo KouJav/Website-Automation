@@ -12,8 +12,15 @@ app = Flask(__name__)
 
 # === Google Sheets Setup ===
 SCOPES = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-CREDS = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", SCOPES)
-gc = gspread.authorize(CREDS)
+import json
+import os
+from oauth2client.service_account import ServiceAccountCredentials
+
+# Load Google credentials from environment variable (safe for Render)
+creds_json = os.getenv("GOOGLE_CREDS_JSON")
+creds_dict = json.loads(creds_json)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPES)
+gc = gspread.authorize(creds)
 
 # === Keywords ===
 POSITIVE_403_KEYWORDS = [
