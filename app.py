@@ -19,6 +19,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 # Load Google credentials from environment variable (safe for Render)
 creds_json = os.getenv("GOOGLE_CREDS_JSON")
 creds_dict = json.loads(creds_json)
+creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")  # <-- Add this line
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPES)
 gc = gspread.authorize(creds)
 
