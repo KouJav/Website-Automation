@@ -1,6 +1,6 @@
 Flask
 gspread
-google-auth
+oauth2client==4.1.3
 pandas
 beautifulsoup4
 gunicorn
