@@ -16,9 +16,12 @@ import os
 import gspread
 from google.oauth2.service_account import Credentials
 
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
 
-# Load credentials from environment variable
+# Load credentials from Render environment variable
 creds_json = os.getenv("GOOGLE_CREDS_JSON")
 
 # Convert JSON string to dictionary
@@ -30,7 +33,6 @@ creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
 # Authenticate with gspread
 creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 gc = gspread.authorize(creds)
-
 
 # === Keywords ===
 POSITIVE_403_KEYWORDS = [
