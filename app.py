@@ -10,18 +10,27 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 app = Flask(__name__)
 
-# === Google Sheets Setup ===
-SCOPES = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+# === Google Sheets Setup (Updated for Render + google-auth) ===
 import json
 import os
-from oauth2client.service_account import ServiceAccountCredentials
+import gspread
+from google.oauth2.service_account import Credentials
 
-# Load Google credentials from environment variable (safe for Render)
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+
+# Load credentials from environment variable
 creds_json = os.getenv("GOOGLE_CREDS_JSON")
+
+# Convert JSON string to dictionary
 creds_dict = json.loads(creds_json)
-creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")  # <-- Add this line
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPES)
+
+# Fix newlines in private key
+creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+
+# Authenticate with gspread
+creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 gc = gspread.authorize(creds)
+
 
 # === Keywords ===
 POSITIVE_403_KEYWORDS = [
